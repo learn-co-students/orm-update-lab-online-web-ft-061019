@@ -1,11 +1,13 @@
 require_relative "../config/environment.rb"
+require 'pry'
 
 class Student
   attr_accessor :name, :grade, :id
 
   # Remember, you can access your database connection anywhere in this class
   #  with DB[:conn]
-  def initialize (name, grade, id = nil)
+  def initialize (id = nil, name, grade)
+    @id = id
     @name = name
     @grade = grade
   end
@@ -53,8 +55,7 @@ class Student
     id = row[0]
     name = row[1]
     grade = row[2]
-    student = Student.new(id, name, grade)
-    student
+    student = self.new(id, name, grade)
   end
 
   def self.find_by_name(name)
@@ -67,7 +68,7 @@ class Student
 
     DB[:conn].execute(sql, name).map do |row|
       self.new_from_db(row)
-    end
+    end.first
   end
 
 
